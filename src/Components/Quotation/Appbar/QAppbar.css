@@ -1,0 +1,54 @@
+/* The sidebar menu */
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 250px; /* Set the width of the sidebar */
+  z-index: 0; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: white; /* Black */
+  overflow: hidden; /* Disable horizontal scroll */
+  padding: 60px 15px 0 0px;
+  z-index: 100000;
+}
+
+/* The navigation menu links */
+.sidenav-i {
+  /* padding: 6px 8px 6px 16px; */
+  text-align: left;
+  text-decoration: none;
+  border-bottom: 2px solid black;
+  width: 100%;
+  font-size: 14px;
+  color: black;
+  display: block;
+  margin: 10px;
+  /* padding-right: 20px; */
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav-i :hover {
+  color: #3f51b5;
+}
+
+.sidenav-login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  /* padding-right: 30px; */
+}
+
+/* Style page content */
+.main {
+  margin-left: 160px; /* Same as the width of the sidebar */
+  padding: 0px 10px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav-i {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,72 @@
+.home {
+  /* border: 2px solid red; */
+  height: 90vh;
+  color: #3f51b5;
+}
+.home-m {
+  /* border: 2px solid purple; */
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.home-m--t {
+  /* border: 2px solid green; */
+  padding: 50px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  font-size: 40px;
+  font-weight: 500;
+}
+.home-m--i {
+  margin-top: 100px;
+  /* border: 2px solid #3f51b5; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 30px;
+  text-align: center;
+  /* border: 2px solid black; */
+  align-self: center;
+  justify-items: center;
+}
+.home-m--i-btn {
+  /* border: 2px solid red; */
+  background-color: transparent;
+  /* padding: 50px; */
+}
+.home-m--i-btn button {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.home-m--i-btn button :hover {
+  color: white;
+
+  /* font-size: 300px; */
+}
+.video-container {
+  height: 500px;
+  width: 500px;
+  overflow: hidden;
+  position: relative;
+}
+
+video {
+  z-index: -1;
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.home-m--i-btn-border {
+  border-right: 2px solid #b7b7b7;
+  border-left: 2px solid #b7b7b7;
+  padding-right: 20px;
+  padding-left: 20px;
+}

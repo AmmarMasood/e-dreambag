@@ -1,0 +1,126 @@
+.services {
+  /* border: 2px solid green; */
+  height: 70vh;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: 1fr;
+  text-align: center;
+  border-top: 2px solid #f7f7f7;
+}
+.image {
+  /* border: 2px solid purple; */
+  height: 250px;
+}
+.image-info {
+  /* border: 2px solid mediumblue; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 1fr 3fr;
+}
+.image-info--1 {
+  /* border: 2px solid darkcyan; */
+  font-size: 20px;
+  font-weight: 400;
+}
+.image-info--2 {
+  /* border: 2px solid darkolivegreen; */
+  border-left: 1px solid black;
+  font-size: 20px;
+}
+.image-info--3 {
+  /* border: 2px solid fuchsia; */
+  font-size: 20px;
+  font-weight: 400;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.image-info--3-1 {
+  /* border: 2px solid red; */
+}
+.image-info--3-2 {
+  /* border: 2px solid blue; */
+}
+.services-image {
+  height: 100%;
+  text-align: center;
+}
+.services-info {
+  border-left: 2px solid #f7f7f7;
+  overflow-y: scroll;
+  z-index: 1;
+  height: 95%;
+  /* border: 2px solid yellow; */
+}
+.standard-box-style {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 10% 2fr 2fr;
+}
+.setRegular {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr 0.5fr 1fr;
+  text-align: left;
+  min-height: 150px;
+}
+.setRegular div {
+  /* border: 1px solid red; */
+}
+.regular-volume {
+  /* display: grid; */
+}
+
+.r-head {
+  font-size: 14px;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+}
+.regular-volume-1 {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+}
+.regular-volume-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.listRegular {
+  border: 4px solid #f7f7f7;
+  width: 100%;
+  border-radius: 5%;
+  display: grid;
+  grid-template-columns: 2fr 4fr 4fr 5fr;
+  grid-template-rows: 1fr;
+  justify-items: flex-end;
+}
+.payment-o {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  border-top: 4px solid #f7f7f7;
+  margin-top: 5px;
+  padding-top: 5px;
+}
+.payment-o-each {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+
+  grid-template-rows: 1fr;
+}
+.payment-p {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+}
+.standard-o {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+.standard-o-each {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
