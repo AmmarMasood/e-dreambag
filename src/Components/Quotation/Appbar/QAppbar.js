@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import QSidebar from "../Sidebar/QSidebar";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {

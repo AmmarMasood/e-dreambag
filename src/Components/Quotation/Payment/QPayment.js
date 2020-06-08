@@ -217,12 +217,12 @@ function QPayment(props) {
             <div className="payment-proc-card-choose">
               <div>
                 <Button variant="outlined" color="primary">
-                  U.S Card Payment
+                  Paypal
                 </Button>
               </div>
               <div>
                 <Button variant="outlined" color="primary">
-                  Card issuance to Korea
+                  U.S Card Payment
                 </Button>
               </div>
             </div>

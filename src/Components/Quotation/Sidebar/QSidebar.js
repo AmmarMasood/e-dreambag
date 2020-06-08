@@ -28,13 +28,13 @@ class QSidebar extends React.Component {
           <div className="sidenav">
             <div className="sidenav-login">
               <div className="sidenav-i">
-                <MenuItem component={Link} to={"/"}>
+                <MenuItem component={Link} to={"/login"}>
                   Login
                 </MenuItem>
                 {/* <Link to="">Login</Link> */}
               </div>
               <div className="sidenav-i">
-                <MenuItem component={Link} to={"/"}>
+                <MenuItem component={Link} to={"/signup"}>
                   Register
                 </MenuItem>
               </div>

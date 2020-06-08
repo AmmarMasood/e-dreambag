@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300&display=swap");
+.signup-main {
+  /* border: 5px solid red; */
+  height: 100vh;
+}
+.signup-form {
+  height: 80%;
+  /* border: 2px solid blue; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 10fr;
+  text-align: center;
+  padding: 10px;
+  font-family: "Titillium Web", sans-serif;
+}
+.signup-form--heading {
+  /* border: 2px solid yellow; */
+  font-size: 30px;
+  padding: 30px;
+  font-weight: 500;
+  color: #424242;
+}
+.signup-form--fields {
+  /* border: 2px solid green; */
+  width: 70%;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-self: center;
+  justify-items: center;
+  padding: 10px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 0.5fr;
+}
+/* ---------------------------------------------------------- */
+.Login-main {
+  /* border: 5px solid red; */
+  height: 100vh;
+}
+.Login-form {
+  height: 80%;
+  /* border: 2px solid blue; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 10fr;
+  text-align: center;
+  padding: 10px;
+  font-family: "Titillium Web", sans-serif;
+}
+.Login-form--heading {
+  /* border: 2px solid yellow; */
+  font-size: 30px;
+  padding: 30px;
+  font-weight: 500;
+  color: #424242;
+}
+.Login-form--fields {
+  /* border: 2px solid green; */
+  width: 70%;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-self: center;
+  justify-items: center;
+  grid-template-rows: 1fr 1fr 1fr 0.3fr 0.3fr;
+}
