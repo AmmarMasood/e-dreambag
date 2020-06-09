@@ -56,14 +56,8 @@ function Signup() {
       });
     }
 
-    if (
-      firstName.length > 0 &&
-      lastName.length > 0 &&
-      password.length > 0 &&
-      !errors.email
-    ) {
-      setErrors({});
-    }
+    setErrors({});
+
     if (Object.keys(errors).length === 0) {
       const obj = {
         username: firstName,

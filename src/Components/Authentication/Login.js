@@ -33,16 +33,16 @@ function Login() {
     }
   };
   const onHandleSubmit = () => {
-    if (!errors.email) {
-      const obj = {
-        username: email,
-        password
-      };
-      axios
-        .post(`${server}/auth/login`, obj)
-        .then(res => console.log("Successfully LoggedIn"))
-        .catch(err => console.log(err));
-    }
+    // if (!errors.email) {
+    const obj = {
+      username: email,
+      password
+    };
+    axios
+      .post(`${server}/auth/login`, obj)
+      .then(res => console.log("Successfully LoggedIn"))
+      .catch(err => console.log(err));
+    // }
   };
 
   return (

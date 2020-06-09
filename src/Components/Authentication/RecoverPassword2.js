@@ -134,7 +134,7 @@ function RecoverPassword2(props) {
               id="standard-adornment-amount"
               value={password}
               error={errors.password}
-              type="email"
+              type="password"
               helperText={errors.password}
               onChange={e => setPassword(e.target.value)}
               startAdornment={
@@ -164,7 +164,7 @@ function RecoverPassword2(props) {
               id="standard-adornment-amount"
               value={password2}
               error={errors.password2}
-              type="email"
+              type="password"
               helperText={errors.password2}
               onChange={e => setPassword2(e.target.value)}
               startAdornment={
