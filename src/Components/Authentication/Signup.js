@@ -12,6 +12,8 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
+import axios from "axios";
+import { server } from "../../Utils/Server";
 
 function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -34,6 +36,51 @@ function Signup() {
     }
   };
 
+  const onHandleSignUp = () => {
+    if (firstName.length <= 0) {
+      return setErrors({ ...errors, firstName: "Please enter first name" });
+    }
+    if (lastName.length <= 0) {
+      return setErrors({ ...errors, lastName: "Please enter last name" });
+    }
+    // if (email.length <= 0) {
+    //   return setErrors({ ...errors, email: "Please enter email" });
+    // }
+    if (password.length <= 0) {
+      return setErrors({ ...errors, password: "Please enter password" });
+    }
+    if (!validateEmail(email)) {
+      return setErrors({
+        ...errors,
+        email: "Please enter valid Email Address"
+      });
+    }
+
+    if (
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      password.length > 0 &&
+      !errors.email
+    ) {
+      setErrors({});
+    }
+    if (Object.keys(errors).length === 0) {
+      const obj = {
+        username: firstName,
+        // lastName,
+        email,
+        password,
+        roles: [1]
+      };
+      axios
+        .post(`${server}/auth/signup`)
+        .then(res => window.alert("SignUp successfull"))
+        .catch(err => console.log(err));
+    }
+
+    // if(email.errors ){}
+  };
+
   return (
     <div className="signup-main">
       <Nav />
@@ -54,6 +101,16 @@ function Signup() {
                 </InputAdornment>
               }
             />
+            <label
+              style={{
+                textAlign: "left",
+                color: "red",
+                padding: "3px",
+                fontSize: "13px"
+              }}
+            >
+              {errors.firstName}
+            </label>
           </FormControl>
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
@@ -70,6 +127,16 @@ function Signup() {
                 </InputAdornment>
               }
             />
+            <label
+              style={{
+                textAlign: "left",
+                color: "red",
+                padding: "3px",
+                fontSize: "13px"
+              }}
+            >
+              {errors.lastName}
+            </label>
           </FormControl>
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
@@ -114,12 +181,23 @@ function Signup() {
                 </InputAdornment>
               }
             />
+            <label
+              style={{
+                textAlign: "left",
+                color: "red",
+                padding: "3px",
+                fontSize: "13px"
+              }}
+            >
+              {errors.password}
+            </label>
           </FormControl>
           <div>
             <Button
               startIcon={<PersonAddIcon />}
               variant="contained"
               color="primary"
+              onClick={onHandleSignUp}
             >
               Submit
             </Button>

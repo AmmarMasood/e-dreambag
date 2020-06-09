@@ -26,12 +26,10 @@ const emailForm = {
 
 function RecoverPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [password2, setPassword2] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmailCorrect, setIsEmailCorrect] = useState(false);
-  const [resToken, setResToken] = useState("");
 
   const validateEmail = email => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -48,25 +46,28 @@ function RecoverPassword() {
   };
 
   const handleCheckEmail = () => {
-    if (!isEmailCorrect) {
+    if (!validateEmail(email)) {
+      return setErrors({
+        ...errors,
+        email: "Please enter valid Email Address"
+      });
+    }
+    setErrors({});
+
+    if (!errors.email) {
       setIsLoading(true);
-      // if (!errors.email) {
-      //   axios
-      //     .post(`${server}/sehd-reset-email`, {email})
-      //     .then(res => {
-      //       setIsLoading(false);
-      //       setIsEmailCorrect(true);
-      //       setResToken(res.data.token);
-      //     })
-      //     .catch(err => {
-      //       setIsLoading(false);
-      //       setIsEmailCorrect(false);
-      //       setErrors({ ...errors, email: "The email you entered is incorrect" });
-      //     });
-      // }
-    } else {
-      // send the other request given the token
-      // setIsLoading(true);
+      axios
+        .post(`${server}/send-reset-email`, { email: email })
+        .then(res => {
+          setIsLoading(false);
+          window.alert(
+            "Email Verified Please Check Your Email To Reset The Password"
+          );
+        })
+        .catch(err => {
+          setIsLoading(false);
+          console.log(err);
+        });
     }
   };
 
@@ -105,80 +106,78 @@ function RecoverPassword() {
     );
   };
 
-  const showPasswordForm = () => {
-    return (
-      <div>
-        <div style={{ padding: "15px" }}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="standard-adornment-amount">
-              Enter Your New Password
-            </InputLabel>
-            <Input
-              id="standard-adornment-amount"
-              value={password}
-              error={errors.password}
-              type="email"
-              helperText={errors.password}
-              onChange={e => setPassword(e.target.value)}
-              startAdornment={
-                <InputAdornment position="start">
-                  <LockIcon />
-                </InputAdornment>
-              }
-            />
-            <label
-              style={{
-                textAlign: "left",
-                color: "red",
-                padding: "3px",
-                fontSize: "13px"
-              }}
-            >
-              {errors.password}
-            </label>
-          </FormControl>
-        </div>
-        <div style={{ padding: "15px" }}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="standard-adornment-amount">
-              Confirm Your New Password
-            </InputLabel>
-            <Input
-              id="standard-adornment-amount"
-              value={password2}
-              error={errors.password2}
-              type="email"
-              helperText={errors.password2}
-              onChange={e => setPassword2(e.target.value)}
-              startAdornment={
-                <InputAdornment position="start">
-                  <LockIcon />
-                </InputAdornment>
-              }
-            />
-            <label
-              style={{
-                textAlign: "left",
-                color: "red",
-                padding: "3px",
-                fontSize: "13px"
-              }}
-            >
-              {errors.password2}
-            </label>
-          </FormControl>
-        </div>
-      </div>
-    );
-  };
+  // const showPasswordForm = () => {
+  //   return (
+  //     <div>
+  //       <div style={{ padding: "15px" }}>
+  //         <FormControl fullWidth>
+  //           <InputLabel htmlFor="standard-adornment-amount">
+  //             Enter Your New Password
+  //           </InputLabel>
+  //           <Input
+  //             id="standard-adornment-amount"
+  //             value={password}
+  //             error={errors.password}
+  //             type="email"
+  //             helperText={errors.password}
+  //             onChange={e => setPassword(e.target.value)}
+  //             startAdornment={
+  //               <InputAdornment position="start">
+  //                 <LockIcon />
+  //               </InputAdornment>
+  //             }
+  //           />
+  //           <label
+  //             style={{
+  //               textAlign: "left",
+  //               color: "red",
+  //               padding: "3px",
+  //               fontSize: "13px"
+  //             }}
+  //           >
+  //             {errors.password}
+  //           </label>
+  //         </FormControl>
+  //       </div>
+  //       <div style={{ padding: "15px" }}>
+  //         <FormControl fullWidth>
+  //           <InputLabel htmlFor="standard-adornment-amount">
+  //             Confirm Your New Password
+  //           </InputLabel>
+  //           <Input
+  //             id="standard-adornment-amount"
+  //             value={password2}
+  //             error={errors.password2}
+  //             type="email"
+  //             helperText={errors.password2}
+  //             onChange={e => setPassword2(e.target.value)}
+  //             startAdornment={
+  //               <InputAdornment position="start">
+  //                 <LockIcon />
+  //               </InputAdornment>
+  //             }
+  //           />
+  //           <label
+  //             style={{
+  //               textAlign: "left",
+  //               color: "red",
+  //               padding: "3px",
+  //               fontSize: "13px"
+  //             }}
+  //           >
+  //             {errors.password2}
+  //           </label>
+  //         </FormControl>
+  //       </div>
+  //     </div>
+  //   );
+  // };
   return (
     <>
       <Nav />
       <div style={mainStyle}>
         <div className="Login-form--heading">Recover Your Password</div>
-        <div style={emailForm}>
-          {isEmailCorrect ? showPasswordForm() : showEmailForm()}
-        </div>
+        <div style={emailForm}>{showEmailForm()}</div>
         <div>
           {isLoading ? (
             <Fade

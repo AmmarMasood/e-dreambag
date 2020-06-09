@@ -4,7 +4,6 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Button from "@material-ui/core/Button";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import FormControl from "@material-ui/core/FormControl";
 import EmailIcon from "@material-ui/icons/Email";
 import LockIcon from "@material-ui/icons/Lock";
@@ -12,6 +11,8 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
+import axios from "axios";
+import { server } from "../../Utils/Server";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -29,6 +30,18 @@ function Login() {
       setErrors({ ...errors, email: "Please enter valid Email Address" });
     } else {
       setErrors({ ...errors, email: "" });
+    }
+  };
+  const onHandleSubmit = () => {
+    if (!errors.email) {
+      const obj = {
+        username: email,
+        password
+      };
+      axios
+        .post(`${server}/auth/login`, obj)
+        .then(res => console.log("Successfully LoggedIn"))
+        .catch(err => console.log(err));
     }
   };
 
@@ -87,6 +100,7 @@ function Login() {
               startIcon={<PersonAddIcon />}
               variant="contained"
               color="primary"
+              onClick={onHandleSubmit}
             >
               Submit
             </Button>
