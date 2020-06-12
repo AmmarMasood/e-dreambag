@@ -1,0 +1,19 @@
+.Form1-main {
+  /* border: 2px solid #b7b7b7; */
+  height: 570px;
+  overflow-y: scroll;
+  position: relative;
+  padding-top: 50px;
+  font-family: "Titillium Web", sans-serif;
+  padding: 0 15% 0 15%;
+}
+/* String name;
+    String company;
+    String street1;
+    String street2;
+    String zip;
+    String city;
+    String state;
+    String country;
+    String phone;
+    String email; */
