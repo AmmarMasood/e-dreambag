@@ -8,8 +8,16 @@ export const boxContext = React.createContext();
 export const regularPriceF = React.createContext();
 export const carrierPriceF = React.createContext();
 export const paymentInfoContext = React.createContext();
-
+// new states for sample
+export const boxTypeContext = React.createContext();
+export const fromAddressContext = React.createContext();
+export const QuotationContext = React.createContext();
 const Store = ({ children }) => {
+  // new stuff starts
+  const [activeStep, setActiveStep] = useState(0);
+  const [fromAddress, setFromAddress] = useState({});
+  const [boxTypeToSend, setBoxTypeToSend] = useState("");
+  // new stuff ends
   const [price, setPrice] = useState({});
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
@@ -27,23 +35,35 @@ const Store = ({ children }) => {
   });
 
   return (
-    <paymentInfoContext.Provider value={[payInfo, setPayInfo]}>
-      <regularPriceF.Provider value={[regularPrice, SetRegularPrice]}>
-        <carrierPriceF.Provider value={[carrierPrice, SetCarrierPrice]}>
-          <boxContext.Provider value={[box, setBox]}>
-            <dropoffdateContext.Provider value={[dropoffDate, setDropoffDate]}>
-              <returndateContext.Provider value={[returnDate, setReturnDate]}>
-                <pickupdateContext.Provider value={[pickupDate, setPickupDate]}>
-                  <priceContext.Provider value={[price, setPrice]}>
-                    {children}
-                  </priceContext.Provider>
-                </pickupdateContext.Provider>
-              </returndateContext.Provider>
-            </dropoffdateContext.Provider>
-          </boxContext.Provider>
-        </carrierPriceF.Provider>
-      </regularPriceF.Provider>
-    </paymentInfoContext.Provider>
+    <QuotationContext.Provider value={[activeStep, setActiveStep]}>
+      <fromAddressContext.Provider value={[fromAddress, setFromAddress]}>
+        <boxTypeContext.Provider value={[boxTypeToSend, setBoxTypeToSend]}>
+          <paymentInfoContext.Provider value={[payInfo, setPayInfo]}>
+            <regularPriceF.Provider value={[regularPrice, SetRegularPrice]}>
+              <carrierPriceF.Provider value={[carrierPrice, SetCarrierPrice]}>
+                <boxContext.Provider value={[box, setBox]}>
+                  <dropoffdateContext.Provider
+                    value={[dropoffDate, setDropoffDate]}
+                  >
+                    <returndateContext.Provider
+                      value={[returnDate, setReturnDate]}
+                    >
+                      <pickupdateContext.Provider
+                        value={[pickupDate, setPickupDate]}
+                      >
+                        <priceContext.Provider value={[price, setPrice]}>
+                          {children}
+                        </priceContext.Provider>
+                      </pickupdateContext.Provider>
+                    </returndateContext.Provider>
+                  </dropoffdateContext.Provider>
+                </boxContext.Provider>
+              </carrierPriceF.Provider>
+            </regularPriceF.Provider>
+          </paymentInfoContext.Provider>
+        </boxTypeContext.Provider>
+      </fromAddressContext.Provider>
+    </QuotationContext.Provider>
   );
 };
 

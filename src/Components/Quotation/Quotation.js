@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -8,10 +8,13 @@ import Typography from "@material-ui/core/Typography";
 import QAppbar from "./Appbar/QAppbar";
 import QPrice from "./Price/QPrice";
 import QService from "./Service/QService";
-import { priceContext } from "../../State/Store";
+import { priceContext, QuotationContext } from "../../State/Store";
 import QPickup from "./Pickup/QPickup";
 import QOptions from "./Options/QOptions";
 import QPayment from "./Payment/QPayment";
+import QServiceN from "./Service/QServiceN";
+import QOptionsN from "./Options/QOptionsN";
+import Form2 from "../Forms/Form2";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,11 +31,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function HorizontalLabelPositionBelowStepper() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useContext(QuotationContext);
   const [price, setPrice] = React.useState(priceContext);
   const steps = getSteps();
   function getSteps() {
-    return ["1. Quotation", "2. Pickup", "3. Options", "4. Payment"];
+    // return ["1. Quotation", "2. Pickup", "3. Options", "4. Payment"];
+    return ["1. Quotation", "2. Pickup Address", "3. Options", "4. Payment"];
   }
 
   function getStepContent(stepIndex) {
@@ -40,19 +44,20 @@ export default function HorizontalLabelPositionBelowStepper() {
       case 0:
         return (
           <div style={{ height: "100%" }}>
-            <QService />
+            <QServiceN />
           </div>
         );
       case 1:
         return (
           <div style={{ height: "100%" }}>
-            <QPickup />
+            {/* <QPickup /> */}
+            <Form2 />
           </div>
         );
       case 2:
         return (
           <div style={{ height: "100%" }}>
-            <QOptions />
+            <QOptionsN />
           </div>
         );
       case 3:

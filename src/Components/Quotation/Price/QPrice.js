@@ -77,7 +77,8 @@ export default function SimpleBottomNavigation() {
   };
   return (
     <>
-      <div>
+      {/* should be uncommented to get original */}
+      {/* <div>
         <Dialog
           onClose={handleClosePrice}
           aria-labelledby="customized-dialog-title"
@@ -92,8 +93,8 @@ export default function SimpleBottomNavigation() {
               Save changes
             </Button>
           </DialogActions> */}
-        </Dialog>
-      </div>
+      {/* </Dialog> */}
+      {/* </div>  */}
       <BottomNavigation
         value={value}
         onChange={(event, newValue) => {
@@ -103,7 +104,8 @@ export default function SimpleBottomNavigation() {
         className={classes.root}
       >
         {/*  border: "2px solid red", */}
-        <div
+        {/* should be uncommented to get original */}
+        {/* <div
           style={{
             zIndex: "2",
             display: "flex",
@@ -142,7 +144,7 @@ export default function SimpleBottomNavigation() {
               Estimated Shipping Cost
             </h3>
           </div>
-        </div>
+        </div> */}
       </BottomNavigation>
     </>
   );

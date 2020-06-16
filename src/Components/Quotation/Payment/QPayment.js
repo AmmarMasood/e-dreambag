@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import "./QPayment.css";
 import {
   paymentInfoContext,
@@ -8,13 +8,18 @@ import {
   pickupdateContext,
   returndateContext,
   dropoffdateContext,
-  boxContext
+  boxContext,
+  boxTypeContext,
+  QuotationContext,
+  fromAddressContext
 } from "../../../State/Store";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import moment from "moment";
+import axios from "axios";
+import { server } from "../../../Utils/Server";
 
 function QPayment(props) {
   const [payInfo, setPayInfo] = useContext(paymentInfoContext);
@@ -27,6 +32,85 @@ function QPayment(props) {
   const [dropoffDate, setDropoffDate] = useContext(dropoffdateContext);
   const [returnDate, setReturnDate] = useContext(returndateContext);
   const [box, setBox] = useContext(boxContext);
+  // new states:
+  const [activeStep, setActiveStep] = React.useContext(QuotationContext);
+  const [fromAddress, setFromAddress] = useContext(boxTypeContext);
+  const [boxTypeToSend, setBoxTypeToSend] = useContext(fromAddressContext);
+  // paypal stuff
+  const [paidfor, setPaidFor] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  let paypalRef = useRef();
+
+  // for paypal script
+  useEffect(() => {
+    // CHECK IS PREV STEPS ARE COMPLETED
+    if (
+      box.p <= 0 ||
+      boxTypeToSend.length < 0 ||
+      Object.keys(fromAddress).length === 0
+    ) {
+      window.alert("Please complete previous steps to go to payment part");
+      setActiveStep(0);
+      console.log(box.p);
+      console.log(boxTypeToSend);
+      console.log(fromAddress);
+    }
+    // load paypal script
+    const script = document.createElement("script");
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=ARJgaOMDPOK269qdv4D0mip8m9-w0rE68EoxMHxGxbWwHgp1IUD4eYmjZUGXeLFYIO_zwBpuKoB6WgLO";
+    script.addEventListener("load", () => setLoaded(true));
+    document.body.appendChild(script);
+
+    if (loaded) {
+      setTimeout(() => {
+        window.paypal
+          .Buttons({
+            createOrder: (data, actions) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    description: "Label for box",
+                    amount: {
+                      currency_code: "USD",
+                      value: box.p
+                    }
+                  }
+                ]
+              });
+            },
+            onApprove: async (data, actions) => {
+              const order = await actions.order.capture();
+              setPaidFor(true);
+              console.log(order);
+            }
+          })
+          .render(paypalRef);
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (paidfor) {
+      const toAddress = {
+        Stree1: "14101 Sullyfield Circle ",
+        Street2: "Suite 340",
+        City: "Chantilly",
+        State: "Virginia or VA",
+        Zip: "20151",
+        Country: "USA"
+      };
+      const parcel = { height: 10, width: 10, weight: 10, length: 10 };
+      axios
+        .post(`${server}/easypost/shipments`, {
+          toAddress,
+          fromAddress,
+          parcel
+        })
+        .then(res => window.alert("Request send to backend"))
+        .catch(err => window.alert(err));
+    }
+  }, [paidfor]);
 
   const returnSTotal = () => {
     var total = 0;
@@ -91,6 +175,7 @@ function QPayment(props) {
           <div className="payment-user-form">
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="Name(Korean)"
@@ -103,6 +188,7 @@ function QPayment(props) {
             </div>
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="Phone Number"
@@ -115,6 +201,7 @@ function QPayment(props) {
             </div>
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="First Name"
@@ -127,6 +214,7 @@ function QPayment(props) {
             </div>
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="Last Name"
@@ -139,6 +227,7 @@ function QPayment(props) {
             </div>
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="Email Address"
@@ -151,6 +240,7 @@ function QPayment(props) {
             </div>
             <div>
               <TextField
+                disabled
                 style={{ width: "100%" }}
                 id="filled-basic"
                 label="Password"
@@ -169,6 +259,7 @@ function QPayment(props) {
                 // style={{ paddingLeft: "50px", fontSize: "14px" }}
                 control={
                   <Checkbox
+                    disabled
                     checked={checked1}
                     onChange={handleChange1}
                     name="checked1"
@@ -184,6 +275,7 @@ function QPayment(props) {
                 // style={{ paddingLeft: "50px", fontSize: "14px" }}
                 control={
                   <Checkbox
+                    disabled
                     checked={checked2}
                     onChange={handleChange2}
                     name="checked2"
@@ -211,20 +303,22 @@ function QPayment(props) {
             </div>
           </div>
           <div className="payment-proc-card">
-            <div className="payment-proc-card-head">
+            {/* <div className="payment-proc-card-head">
               Service application deposit: $ 40
-            </div>
+            </div> */}
             <div className="payment-proc-card-choose">
-              <div>
-                <Button variant="outlined" color="primary">
-                  Paypal
-                </Button>
-              </div>
-              <div>
-                <Button variant="outlined" color="primary">
-                  U.S Card Payment
-                </Button>
-              </div>
+              {paidfor ? (
+                <div style={{ padding: "40px" }}>
+                  <h3>Payment complete please check your dashboard</h3>
+                </div>
+              ) : (
+                <div>
+                  {/* <Button variant="outlined" color="primary">
+                    Pay with paypal
+                  </Button> */}
+                  <div ref={v => (paypalRef = v)} />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -239,7 +333,7 @@ function QPayment(props) {
             &#8592; Edit
           </Button>
         </div>
-        <div className="payment-info-standard">
+        {/* <div className="payment-info-standard">
           <p>Standard Box</p>
           {price.oneFivekgsPrice ? (
             <div className="payment-info-standard-i">
@@ -299,37 +393,36 @@ function QPayment(props) {
                 : "Not Choosen"}
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="payment-info-estimate">
-          <div className="payment-info-estimate-head">
-            Estimated shipping cost
-          </div>
-          <div className="payment-info-estimate-i">
+          <div className="payment-info-estimate-head">Estimated cost</div>
+          {/* <div className="payment-info-estimate-i">
             <div>Price before discount</div>
             <div>$ {returnSTotal()}</div>
           </div>
           <div className="payment-info-estimate-i">
             <div>Price after discount</div>
             <div>$ {(returnSTotal() * 0.6676).toFixed(2)}</div>
-          </div>
+          </div> */}
           <div className="payment-info-estimate-i">
             <div>Box / label delivery</div>
             <div>$ {box.p}</div>
           </div>
-          <div className="payment-info-estimate-i">
+          {/* <div className="payment-info-estimate-i">
             <div>Customs fees</div>
             <div>$ 25.00</div>
-          </div>
+          </div> */}
           <div className="payment-info-estimate-i">
             <div>TOTAL</div>
-            <div>$ {paymentPrice()}</div>
+            {/* <div>$ {paymentPrice()}</div> */}
+            <div>$ {paymentPrice() - 25}</div>
           </div>
         </div>
 
-        <div className="payment-info-estimate-t">
+        {/* <div className="payment-info-estimate-t">
           <div>Service reservation amount</div>
           <div>$ 40</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

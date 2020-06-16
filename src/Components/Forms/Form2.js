@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Form.css";
 import QAppbar from "../Quotation/Appbar/QAppbar";
 import Grid from "@material-ui/core/Grid";
@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import { server } from "../../Utils/Server";
+import { fromAddressContext } from "../../State/Store";
 
 function Form2() {
   const [name, setName] = useState("");
@@ -18,10 +19,12 @@ function Form2() {
   const [phone, setPhone] = useState("");
   const [state, setState] = useState("");
   const [email, setEmail] = useState("");
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [width, setWidth] = useState("");
-  const [length, setLength] = useState("");
+  const [fromAddress, setFromAddress] = useContext(fromAddressContext);
+
+  // const [weight, setWeight] = useState("");
+  // const [height, setHeight] = useState("");
+  // const [width, setWidth] = useState("");
+  // const [length, setLength] = useState("");
   const onButtonSubmit = () => {
     const obj = {
       name,
@@ -35,33 +38,13 @@ function Form2() {
       state,
       email
     };
-    const obj2 = {
-      length,
-      weight,
-      height,
-      width
-    };
-    axios
-      .post(`${server}/easypost/shipments`, {
-        fromAddress: obj,
-        toAddress: {},
-        parcel: obj2
-      })
-      .then(res => {
-        window.alert("Success");
-        console.log(res);
-      })
-      .catch(err => {
-        window.alert("Error: Check the console");
-        console.log(err);
-      });
+    setFromAddress(obj);
+    window.alert("Address Added");
   };
 
   return (
     <div className="Form-main">
-      <QAppbar />
       <div className="Form1-main">
-        <h1>Shipment Information</h1>
         <Grid container spacing={3}>
           <h3 style={{ textDecoration: "underline" }}>From Address:</h3>
           <Grid item xs={12}>
@@ -175,7 +158,7 @@ function Form2() {
             />
           </Grid>
         </Grid>
-        <Grid container spacing={3} style={{ marginTop: "30px" }}>
+        {/* <Grid container spacing={3} style={{ marginTop: "30px" }}>
           <h3
             style={{
               textDecoration: "underline",
@@ -230,7 +213,7 @@ function Form2() {
               onChange={e => setLength(e.target.value)}
             />
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} style={{ textAlign: "center" }}>
           <Button
@@ -239,7 +222,7 @@ function Form2() {
             style={{ marginTop: "50px", marginBotton: "100px" }}
             onClick={onButtonSubmit}
           >
-            Submit
+            Click to Enter Address
           </Button>
         </Grid>
       </div>
