@@ -9,11 +9,14 @@
 }
 
 .payment-image {
-  height: 95%;
+  /* change it back to 95% */
+  height: 400px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
+  /* change it back */
+  /* grid-template-rows: 1fr 1fr; */
+  grid-template-rows: 1fr;
   overflow-y: scroll;
   z-index: 1;
   padding: 10px;
@@ -25,7 +28,7 @@
   grid-template-rows: 2fr 1fr;
   /* border: 2px solid red; */
   padding: 10px;
-  border-bottom: 3px solid #bababa;
+  /* border-bottom: 3px solid #bababa; */
   /* border-radius: 50%; */
 }
 .payment-user-form {
@@ -81,7 +84,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 .payment-proc-card-choose button {
   padding: 15px 80px 15px 80px;

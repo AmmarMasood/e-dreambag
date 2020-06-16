@@ -172,7 +172,7 @@ function QPayment(props) {
     <div className="payment">
       <div className="payment-image">
         <div className="payment-user">
-          <div className="payment-user-form">
+          {/* <div className="payment-user-form">
             <div>
               <TextField
                 disabled
@@ -286,7 +286,7 @@ function QPayment(props) {
                 carriage."
               />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="payment-proc">
           <div className="payment-proc-adv">
