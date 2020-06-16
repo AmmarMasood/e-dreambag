@@ -109,7 +109,7 @@ function QPayment(props) {
           parcel,
           boxType: boxTypeToSend,
           boxPrice: box.p,
-          NoOfBoxes: parseInt(box.b, 10)
+          NumberOfBoxes: parseInt(box.b, 10)
         })
         .then(res => window.alert("Request send to backend"))
         .catch(err => window.alert(err));
