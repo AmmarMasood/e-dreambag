@@ -34,8 +34,9 @@ function QPayment(props) {
   const [box, setBox] = useContext(boxContext);
   // new states:
   const [activeStep, setActiveStep] = React.useContext(QuotationContext);
-  const [fromAddress, setFromAddress] = useContext(boxTypeContext);
-  const [boxTypeToSend, setBoxTypeToSend] = useContext(fromAddressContext);
+  const [fromAddress, setFromAddress] = useContext(fromAddressContext);
+  const [boxTypeToSend, setBoxTypeToSend] = useContext(boxTypeContext);
+
   // paypal stuff
   const [paidfor, setPaidFor] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -105,7 +106,10 @@ function QPayment(props) {
         .post(`${server}/easypost/shipments`, {
           toAddress,
           fromAddress,
-          parcel
+          parcel,
+          boxType: boxTypeToSend,
+          boxPrice: box.p,
+          NoOfBoxes: box.b
         })
         .then(res => window.alert("Request send to backend"))
         .catch(err => window.alert(err));
