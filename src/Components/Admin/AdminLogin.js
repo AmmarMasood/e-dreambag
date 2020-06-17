@@ -15,7 +15,7 @@ import axios from "axios";
 import { server } from "../../Utils/Server";
 import { AuthContext } from "../../State/Store";
 import { withRouter } from "react-router";
-
+import setAuthToken from "../../Utils/setAuthToken";
 function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +49,7 @@ function AdminLogin() {
           role: ""
         });
         localStorage.setItem("token", res.data.accessToken);
+        setAuthToken(res.data.accessToken);
         this.history.push("/admin-dashboard");
       })
       .catch(err => {
