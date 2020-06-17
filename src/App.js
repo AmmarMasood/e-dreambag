@@ -9,6 +9,8 @@ import RecoverPassword from "./Components/Authentication/RecoverPassword";
 import RecoverPassword2 from "./Components/Authentication/RecoverPassword2";
 import Form1 from "./Components/Forms/Form1";
 import Form2 from "./Components/Forms/Form2";
+import AdminLogin from "./Components/Admin/AdminLogin";
+import AdminDashboard from "./Components/Admin/AdminDashboard";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           />
           <Route exact path="/form" component={Form1} />
           <Route exact path="/form-shipment" component={Form2} />
+          <Route exact path="/admin-login" component={AdminLogin} />
+          <Route exact path="/admin-dashboard" component={AdminDashboard} />
         </Switch>
       </div>
     </Router>
