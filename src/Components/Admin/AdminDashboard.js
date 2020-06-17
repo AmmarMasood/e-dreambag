@@ -80,6 +80,7 @@ function AdminDashboard(props) {
   const [data, setData] = useState([]);
   const [currentDialogData, setCurrentDialogData] = useState(0);
   const [auth, setAuth] = useContext(AuthContext);
+  const [returnLabel, setReturnLabel] = useState("");
   const classes = useStyles();
 
   useEffect(() => {
@@ -92,7 +93,14 @@ function AdminDashboard(props) {
     } else {
       props.history.push("/admin-login");
     }
-  });
+  }, [auth]);
+
+  const onReturnLabel = id => {
+    axios
+      .get(`easypost/createreturnlabel/${id}`)
+      .then(res => setReturnLabel(res.data.returnLabel))
+      .catch(err => window.alert(err));
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -255,6 +263,19 @@ function AdminDashboard(props) {
                 }
               }
             >
+              <div style={{ fontWeight: "bold" }}>Return Label Url:</div>
+              <div>
+                <a href={returnLabel}>{returnLabel}</a>
+              </div>
+            </Typography>
+            <Typography
+              gutterBottom
+              style={
+                {
+                  // border: "2px solid red"
+                }
+              }
+            >
               <div style={{ fontWeight: "bold" }}>Label Price:</div>
               <div>{data[currentDialogData].labelPrice}</div>
             </Typography>
@@ -318,6 +339,7 @@ function AdminDashboard(props) {
         {data.map((d, i) => (
           <ListItem
             onClick={() => {
+              onReturnLabel(d.id);
               handleClickOpen(true);
               setCurrentDialogData(i);
             }}
@@ -325,7 +347,7 @@ function AdminDashboard(props) {
             button
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 4fr 1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(25%, 2fr))",
               gridTemplateRows: "1fr",
               border: "1px solid #b7b7b7"
             }}
@@ -335,15 +357,16 @@ function AdminDashboard(props) {
             </div>
             <div>
               <ListItemText>
-                <a href={d.labelUrl}>{d.labelUrl}</a>
+                <a href={d.labelUrl}>Click here to check the Label Url</a>
               </ListItemText>
             </div>
-            <div></div>
+
             <div>
               <Button
                 variant="contained"
                 color="primary"
-                style={{ marginLeft: "20px" }}
+                style={{ marginLeft: "20px", zIndex: "10", float: "right" }}
+                onClick={() => onReturnLabel(d.id)}
               >
                 {" "}
                 &rarr;

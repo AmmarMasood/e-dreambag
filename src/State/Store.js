@@ -18,7 +18,7 @@ const Store = ({ children }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [fromAddress, setFromAddress] = useState({});
   const [boxTypeToSend, setBoxTypeToSend] = useState("");
-  const [auth, setAuth] = useState({ role: "", token: "100" });
+  const [auth, setAuth] = useState({ role: "", token: "" });
   // new stuff ends
   const [price, setPrice] = useState({});
   const [pickupDate, setPickupDate] = useState("");
