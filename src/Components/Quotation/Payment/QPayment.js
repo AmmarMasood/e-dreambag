@@ -94,13 +94,18 @@ function QPayment(props) {
   useEffect(() => {
     if (paidfor) {
       const toAddress = {
-        Stree1: "14101 Sullyfield Circle ",
-        Street2: "Suite 340",
-        City: "Chantilly",
-        State: "Virginia or VA",
-        Zip: "20151",
-        Country: "USA"
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        stree1: "14101 Sullyfield Circle ",
+        street2: "Suite 340",
+        city: "Chantilly",
+        state: "VA",
+        zip: "20151",
+        country: "USA"
       };
+
       const parcel = { height: 10, width: 10, weight: 10, length: 10 };
       axios
         .post(`${server}/easypost/shipments`, {
