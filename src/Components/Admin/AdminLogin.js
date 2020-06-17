@@ -16,7 +16,7 @@ import { server } from "../../Utils/Server";
 import { AuthContext } from "../../State/Store";
 import { withRouter } from "react-router";
 import setAuthToken from "../../Utils/setAuthToken";
-function AdminLogin() {
+function AdminLogin(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -50,7 +50,7 @@ function AdminLogin() {
         });
         localStorage.setItem("token", res.data.accessToken);
         setAuthToken(res.data.accessToken);
-        this.history.push("/admin-dashboard");
+        props.history.push("/admin-dashboard");
       })
       .catch(err => {
         window.alert(err);
