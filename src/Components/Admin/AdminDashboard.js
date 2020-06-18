@@ -76,8 +76,48 @@ const DialogTitle = withStyles(styles)(props => {
 });
 
 function AdminDashboard(props) {
+  const [openReturn, setOpenReturn] = useState(true);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([
+    {
+      toAddress: {
+        name: null,
+        country: "US",
+        company: null,
+        street1: null,
+        street2: "Suite 340",
+        city: "Chantilly",
+        zip: 20151,
+        state: "VA",
+        phone: 0,
+        email: null
+      },
+      fromAddress: {
+        name: null,
+        country: "US",
+        company: "",
+        street1: "417 Montgomery Street",
+        street2: "5th Floor",
+        city: "San Francisco",
+        zip: 94104,
+        state: "CA",
+        phone: 4155287555,
+        email: null
+      },
+      parcel: {
+        height: 10,
+        weight: 10,
+        width: 10,
+        length: 10
+      },
+      price: 0,
+      labelUrl:
+        "https://easypost-files.s3-us-west-2.amazonaws.com/files/postage_label/20200617/5e0bdf6bb5244c2d8510899fcf89f09c.png",
+      labelPrice: 4.460000038146973,
+      boxType: "30",
+      numberOfBoxes: 0
+    }
+  ]);
   const [currentDialogData, setCurrentDialogData] = useState(0);
   const [auth, setAuth] = useContext(AuthContext);
   const [returnLabel, setReturnLabel] = useState("");
@@ -98,7 +138,10 @@ function AdminDashboard(props) {
   const onReturnLabel = id => {
     axios
       .get(`easypost/createreturnlabel/${id}`)
-      .then(res => setReturnLabel(res.data.returnLabel))
+      .then(res => {
+        setReturnLabel(res.data.returnLabel);
+        setOpenReturn(true);
+      })
       .catch(err => window.alert(err));
   };
 
@@ -108,6 +151,36 @@ function AdminDashboard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleReturnClose = () => {
+    setOpenReturn(false);
+  };
+
+  const ReturnLabelDialog = () => (
+    <Dialog
+      onClose={handleReturnClose}
+      aria-labelledby="customized-dialog-title"
+      open={openReturn}
+    >
+      <DialogTitle id="customized-dialog-title" onClose={handleReturnClose}>
+        <div style={{ paddingRight: "30px" }}>Return Label</div>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Typography
+          gutterBottom
+          style={
+            {
+              // border: "2px solid red"
+            }
+          }
+        >
+          <div style={{ fontWeight: "bold" }}>Return Label:</div>
+          <div>{returnLabel}</div>
+        </Typography>
+      </DialogContent>
+    </Dialog>
+  );
+
   // dialog open box
   const MyDialog = () => {
     if (!Object.keys(data).length == 0) {
@@ -263,19 +336,6 @@ function AdminDashboard(props) {
                 }
               }
             >
-              <div style={{ fontWeight: "bold" }}>Return Label Url:</div>
-              <div>
-                <a href={returnLabel}>{returnLabel}</a>
-              </div>
-            </Typography>
-            <Typography
-              gutterBottom
-              style={
-                {
-                  // border: "2px solid red"
-                }
-              }
-            >
               <div style={{ fontWeight: "bold" }}>Label Price:</div>
               <div>{data[currentDialogData].labelPrice}</div>
             </Typography>
@@ -337,42 +397,49 @@ function AdminDashboard(props) {
     <div style={{ padding: "30px" }}>
       <List>
         {data.map((d, i) => (
-          <ListItem
-            onClick={() => {
-              onReturnLabel(d.id);
-              handleClickOpen(true);
-              setCurrentDialogData(i);
-            }}
-            key={i}
-            button
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(25%, 2fr))",
-              gridTemplateRows: "1fr",
-              border: "1px solid #b7b7b7"
-            }}
-          >
-            <div>
-              <ListItemText primary={i + 1} />
-            </div>
-            <div>
-              <ListItemText>
-                <a href={d.labelUrl}>Click here to check the Label Url</a>
-              </ListItemText>
-            </div>
-
+          <div style={{ display: "grid", gridTemplateColumns: "4fr 0.5fr" }}>
+            <ListItem
+              onClick={() => {
+                handleClickOpen(true);
+                setCurrentDialogData(i);
+              }}
+              key={i}
+              button
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(25%, 2fr))",
+                gridTemplateRows: "1fr",
+                border: "1px solid #b7b7b7"
+              }}
+            >
+              <div>
+                <ListItemText primary={i + 1} />
+              </div>
+              <div>
+                <ListItemText>
+                  <a href={d.labelUrl}>Click here to check the Label Url</a>
+                </ListItemText>
+              </div>
+            </ListItem>
             <div>
               <Button
                 variant="contained"
                 color="primary"
-                style={{ marginLeft: "20px", zIndex: "10", float: "right" }}
-                onClick={() => onReturnLabel(d.id)}
+                style={{
+                  zIndex: "10",
+                  float: "left",
+                  padding: "20px",
+                  width: "100%"
+                }}
+                onClick={() => {
+                  onReturnLabel(d.id);
+                }}
               >
                 {" "}
                 &rarr;
               </Button>
             </div>
-          </ListItem>
+          </div>
         ))}
       </List>
     </div>
@@ -390,6 +457,7 @@ function AdminDashboard(props) {
         {MyList()}
       </div>
       {MyDialog()}
+      {ReturnLabelDialog()}
     </div>
   );
 }
