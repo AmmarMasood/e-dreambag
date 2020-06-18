@@ -134,6 +134,23 @@ function Login() {
             >
               Go To SignUp
             </MenuItem>
+
+          </div>
+          <div>
+            Are you an Admin?{" "}
+            <MenuItem
+              style={{
+                display: "inline",
+                color: "blue",
+                textDecoration: "underline",
+                padding: "2px"
+              }}
+              component={Link}
+              to={"/admin-login"}
+            >
+              Admin Login
+            </MenuItem>
+            
           </div>
         </div>
       </div>
