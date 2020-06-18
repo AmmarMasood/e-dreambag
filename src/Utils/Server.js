@@ -1,1 +1,1 @@
-export const server = "http://localhost:8080";
+export const server = "https://dry-wave-98792.herokuapp.com";
