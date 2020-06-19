@@ -76,48 +76,9 @@ const DialogTitle = withStyles(styles)(props => {
 });
 
 function AdminDashboard(props) {
-  const [openReturn, setOpenReturn] = useState(true);
+  const [openReturn, setOpenReturn] = useState(false);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([
-    {
-      toAddress: {
-        name: null,
-        country: "US",
-        company: null,
-        street1: null,
-        street2: "Suite 340",
-        city: "Chantilly",
-        zip: 20151,
-        state: "VA",
-        phone: 0,
-        email: null
-      },
-      fromAddress: {
-        name: null,
-        country: "US",
-        company: "",
-        street1: "417 Montgomery Street",
-        street2: "5th Floor",
-        city: "San Francisco",
-        zip: 94104,
-        state: "CA",
-        phone: 4155287555,
-        email: null
-      },
-      parcel: {
-        height: 10,
-        weight: 10,
-        width: 10,
-        length: 10
-      },
-      price: 0,
-      labelUrl:
-        "https://easypost-files.s3-us-west-2.amazonaws.com/files/postage_label/20200617/5e0bdf6bb5244c2d8510899fcf89f09c.png",
-      labelPrice: 4.460000038146973,
-      boxType: "30",
-      numberOfBoxes: 0
-    }
-  ]);
+  const [data, setData] = useState([]);
   const [currentDialogData, setCurrentDialogData] = useState(0);
   const [auth, setAuth] = useContext(AuthContext);
   const [returnLabel, setReturnLabel] = useState("");
@@ -137,7 +98,7 @@ function AdminDashboard(props) {
 
   const onReturnLabel = id => {
     axios
-      .get(`easypost/createreturnlabel/${id}`)
+      .get(`${server}/easypost/createreturnlabel/${id}`)
       .then(res => {
         setReturnLabel(res.data.returnLabel);
         setOpenReturn(true);
@@ -436,7 +397,7 @@ function AdminDashboard(props) {
                 }}
               >
                 {" "}
-                &rarr;
+                Return Label
               </Button>
             </div>
           </div>

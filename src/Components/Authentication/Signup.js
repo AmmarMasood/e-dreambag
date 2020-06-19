@@ -14,6 +14,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
 import axios from "axios";
 import { server } from "../../Utils/Server";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Fade from "@material-ui/core/Fade";
 
 function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -21,6 +23,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = React.useState(false);
 
   const validateEmail = email => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -38,27 +41,17 @@ function Signup() {
 
   const onHandleSignUp = () => {
     if (firstName.length <= 0) {
-      return setErrors({ ...errors, firstName: "Please enter first name" });
-    }
-    if (lastName.length <= 0) {
-      return setErrors({ ...errors, lastName: "Please enter last name" });
-    }
-    // if (email.length <= 0) {
-    //   return setErrors({ ...errors, email: "Please enter email" });
-    // }
-    if (password.length <= 0) {
-      return setErrors({ ...errors, password: "Please enter password" });
-    }
-    if (!validateEmail(email)) {
-      return setErrors({
+      setErrors({ ...errors, firstName: "Please enter first name" });
+    } else if (lastName.length <= 0) {
+      setErrors({ ...errors, lastName: "Please enter last name" });
+    } else if (password.length <= 0) {
+      setErrors({ ...errors, password: "Please enter password" });
+    } else if (!validateEmail(email)) {
+      setErrors({
         ...errors,
         email: "Please enter valid Email Address"
       });
-    }
-
-    setErrors({});
-
-    if (Object.keys(errors).length === 0) {
+    } else {
       const obj = {
         username: firstName,
         // lastName,
@@ -66,9 +59,13 @@ function Signup() {
         password,
         roles: [1]
       };
+      setLoading(true);
       axios
-        .post(`${server}/auth/signup`)
-        .then(res => window.alert("SignUp successfull"))
+        .post(`${server}/auth/signup`, obj)
+        .then(res => {
+          setLoading(false);
+          window.alert("SignUp successfull");
+        })
         .catch(err => console.log(err));
     }
 
@@ -187,14 +184,20 @@ function Signup() {
             </label>
           </FormControl>
           <div>
-            <Button
-              startIcon={<PersonAddIcon />}
-              variant="contained"
-              color="primary"
-              onClick={onHandleSignUp}
-            >
-              Submit
-            </Button>
+            {loading ? (
+              <div>
+                <CircularProgress />
+              </div>
+            ) : (
+              <Button
+                startIcon={<PersonAddIcon />}
+                variant="contained"
+                color="primary"
+                onClick={onHandleSignUp}
+              >
+                Submit
+              </Button>
+            )}
           </div>
           <div>
             Already A Member?{" "}
