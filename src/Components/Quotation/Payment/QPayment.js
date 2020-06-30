@@ -16,10 +16,26 @@ import {
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import EmailIcon from "@material-ui/icons/Email";
+import LockIcon from "@material-ui/icons/Lock";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import Button from "@material-ui/core/Button";
 import moment from "moment";
 import axios from "axios";
 import { server } from "../../../Utils/Server";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from "@material-ui/core";
+import { withRouter } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Fade from "@material-ui/core/Fade";
 
 function QPayment(props) {
   const [payInfo, setPayInfo] = useContext(paymentInfoContext);
@@ -36,6 +52,12 @@ function QPayment(props) {
   const [activeStep, setActiveStep] = React.useContext(QuotationContext);
   const [fromAddress, setFromAddress] = useContext(fromAddressContext);
   const [boxTypeToSend, setBoxTypeToSend] = useContext(boxTypeContext);
+  const [orderId, setOrderId] = useState("");
+  const [loading, setLoading] = useState(false);
+  // login form stuff
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // paypal stuff
   const [paidfor, setPaidFor] = useState(false);
@@ -107,6 +129,7 @@ function QPayment(props) {
       };
 
       const parcel = { height: 10, width: 10, weight: 10, length: 10 };
+      setLoading(true);
       axios
         .post(`${server}/easypost/shipments`, {
           toAddress,
@@ -116,7 +139,10 @@ function QPayment(props) {
           boxPrice: box.p,
           numberOfBoxes: parseInt(box.b, 10)
         })
-        .then(res => window.alert("Request send to backend"))
+        .then(res => {
+          window.alert("Success. Please Go Back to Your Dashboard");
+          setLoading(false);
+        })
         .catch(err => window.alert(err));
     }
   }, [paidfor]);
@@ -131,6 +157,87 @@ function QPayment(props) {
     }
     return total;
   };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleLogin = () => {
+    localStorage.setItem(
+      "token",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjdlZmE3YTRmLTg3OWYtNDkwNC1iN2VjLTQwN2IwNzQ1NTBhYiIsImlhdCI6MTU5MzM0OTc3NiwiZXhwIjoxNTkzMzUzMzc2fQ.vMpNZBykGa_mYR874mcLEhx0DwGxWlTf4bfFjLScFXQ"
+    );
+    localStorage.setItem("role", "USER");
+    const obj = {
+      username: email,
+      password
+    };
+    axios
+      .post(`${server}/auth/login`, obj)
+      .then(res => {
+        const token = res.data.accessToken;
+        const role = res.data.roles[0].name;
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        setOpen(false);
+      })
+      .catch(err => {
+        window.alert(err);
+        console.log(err);
+      });
+  };
+
+  const dialog = () => (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="form-dialog-title"
+    >
+      <DialogTitle id="form-dialog-title">Please Login To Continue</DialogTitle>
+      <DialogContent>
+        <FormControl fullWidth style={{ padding: "20px 0 20px 0" }}>
+          <InputLabel htmlFor="standard-adornment-amount">Username</InputLabel>
+          <Input
+            id="standard-adornment-amount"
+            value={email}
+            // error={errors.email}
+            type="email"
+            // helperText={errors.email}
+            onChange={e => setEmail(e.target.value)}
+            startAdornment={
+              <InputAdornment position="start">
+                <EmailIcon />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl fullWidth style={{ padding: "20px 0 20px 0" }}>
+          <InputLabel htmlFor="standard-adornment-amount">Password</InputLabel>
+          <Input
+            id="standard-adornment-amount"
+            value={password}
+            type="password"
+            onChange={e => setPassword(e.target.value)}
+            startAdornment={
+              <InputAdornment position="start">
+                <LockIcon />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleLogin} color="primary">
+          Login
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   const paymentPrice = () => {
     const sTotal = returnSTotal() * 0.6676;
@@ -181,6 +288,7 @@ function QPayment(props) {
     <div className="payment">
       <div className="payment-image">
         <div className="payment-user">
+          {dialog()}
           {/* <div className="payment-user-form">
             <div>
               <TextField
@@ -316,17 +424,65 @@ function QPayment(props) {
               Service application deposit: $ 40
             </div> */}
             <div className="payment-proc-card-choose">
-              {paidfor ? (
-                <div style={{ padding: "40px" }}>
-                  <h3>Payment complete please check your dashboard</h3>
-                </div>
-              ) : (
-                <div>
-                  {/* <Button variant="outlined" color="primary">
+              {localStorage.getItem("token") && localStorage.getItem("role") ? (
+                paidfor ? (
+                  <div style={{ display: "grid", gridTemplateRows: "1fr 1fr" }}>
+                    <div>
+                      <h3>Payment complete please check your dashboard</h3>
+                    </div>
+                    {loading ? (
+                      <div>
+                        <CircularProgress />
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr"
+                        }}
+                      >
+                        {/* <div>
+                          <Button
+                            variant="contained"
+                            onClick={() =>
+                              props.history.push(`/box-management/${orderId}`)
+                            }
+                            color="primary"
+                          >
+                            Go to Box Management
+                          </Button>
+                        </div> */}
+                        <div>
+                          <Button
+                            variant="contained"
+                            onClick={() =>
+                              props.history.push("/user-dashboard")
+                            }
+                            color="primary"
+                          >
+                            Go To Dashboard
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    {/* <Button variant="outlined" color="primary">
                     Pay with paypal
                   </Button> */}
-                  <div ref={v => (paypalRef = v)} />
-                </div>
+                    <div ref={v => (paypalRef = v)} />
+                  </div>
+                )
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={() => setOpen(true)}
+                  color="primary"
+                  style={{ margin: "10%" }}
+                >
+                  Please Login To Continue With Payment
+                </Button>
               )}
             </div>
           </div>
@@ -436,4 +592,4 @@ function QPayment(props) {
     </div>
   );
 }
-export default QPayment;
+export default withRouter(QPayment);

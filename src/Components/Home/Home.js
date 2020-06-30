@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Appbar from "../Quotation/Appbar/QAppbar";
 import Button from "@material-ui/core/Button";
 import "./Home.css";
+import { withRouter } from "react-router-dom";
 
-function Home() {
+function Home(props) {
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("role")) {
+      localStorage.getItem("role") === "USER"
+        ? props.history.push("/user-dashboard")
+        : props.history.push("/admin-dashboard");
+    } else {
+      localStorage.clear();
+    }
+  }, []);
+
   return (
     <>
       <Appbar />
@@ -84,4 +95,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withRouter(Home);

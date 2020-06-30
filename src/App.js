@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import Quotation from "./Components/Quotation/Quotation";
 import Home from "./Components/Home/Home";
@@ -11,6 +11,12 @@ import Form1 from "./Components/Forms/Form1";
 import Form2 from "./Components/Forms/Form2";
 import AdminLogin from "./Components/Admin/AdminLogin";
 import AdminDashboard from "./Components/Admin/AdminDashboard";
+// Box Management List Components
+import BoxManagement from "./Components/BoxManagement/BoxManagement";
+import Box from "./Components/BoxManagement/Box";
+import UserDashboard from "./Components/User/UserDashboard";
+import UserRequest from "./Components/User/UserRequest";
+import PrivateRoute from "./Utils/PrivateRoute";
 
 function App() {
   return (
@@ -31,6 +37,13 @@ function App() {
           <Route exact path="/form-shipment" component={Form2} />
           <Route exact path="/admin-login" component={AdminLogin} />
           <Route exact path="/admin-dashboard" component={AdminDashboard} />
+          <Route exact path="/box-management/:orderid" component={Box} />
+          <PrivateRoute
+            exact
+            path="/user-dashboard"
+            component={UserDashboard}
+          />
+          <Route exact path="/user-request/:orderid" component={UserRequest} />
         </Switch>
       </div>
     </Router>

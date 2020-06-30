@@ -1,0 +1,29 @@
+.main-userdashboard {
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-family: "Titillium Web", sans-serif;
+  height: 100vh;
+  position: relative;
+}
+
+.container-userdashboard {
+  /* position: relative; */
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.listitem-userdashboard {
+  /* border: 2px solid red; */
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  justify-items: center;
+  margin: 3px;
+}
+
+.heading-userdashboard {
+  border-bottom: 2px solid black;
+  text-align: left;
+  margin: 10px;
+}

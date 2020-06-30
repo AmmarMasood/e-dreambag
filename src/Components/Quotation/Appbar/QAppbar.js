@@ -20,21 +20,30 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ colorInvert }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <QSidebar />
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        style={{ backgroundColor: colorInvert ? "#ffffff" : "#3f51b5" }}
+      >
         <Toolbar>
           <IconButton
             edge="start"
             className={classes.menuButton}
-            color="inherit"
             aria-label="menu"
           >
-            <p style={{ margin: "0" }}>eDreambag.com</p>
+            <p
+              style={{
+                margin: "0",
+                color: colorInvert ? "#3f51b5" : "#ffffff"
+              }}
+            >
+              eDreambag.com
+            </p>
           </IconButton>
           <Typography variant="h6" className={classes.title}></Typography>
           {/* <IconButton
@@ -48,7 +57,7 @@ export default function ButtonAppBar() {
           </IconButton> */}
         </Toolbar>
       </AppBar>
-      <QSidebar />
+      <QSidebar colorInvert={colorInvert} />
     </div>
   );
 }

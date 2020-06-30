@@ -1,0 +1,57 @@
+.main-userrequest {
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-family: "Titillium Web", sans-serif;
+  height: 100vh;
+  position: relative;
+}
+
+.container-userrequest {
+  /* position: relative; */
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.heading-userrequest {
+  border-bottom: 2px solid black;
+  text-align: left;
+  margin: 10px;
+}
+
+.stepper-userrequest {
+  width: 80%;
+}
+
+/* from upload files component */
+.uploadfiles-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+}
+
+.uploadfile-container {
+  border: 1px solid #c1c1c1;
+}
+.uploadPicturesWrapper {
+  /* border: 2px solid violet; */
+  width: 30vw !important;
+}
+.uploadPicturesWrapper > div {
+  display: grid !important;
+  justify-content: start !important;
+  grid-auto-flow: column !important;
+  grid-gap: 10px !important;
+  overflow-x: scroll !important;
+  background-color: rgba(189, 189, 189, 0.46);
+}
+.uploadPictureContainer {
+  /* border: 2px solid yellowgreen !important; */
+  width: 100px !important;
+  height: 100px;
+}
+.uploadPictureContainer img {
+  width: 100px;
+  height: 100px;
+}

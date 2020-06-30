@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../Quotation/Appbar/QAppbar";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -9,7 +9,7 @@ import FormControl from "@material-ui/core/FormControl";
 import EmailIcon from "@material-ui/icons/Email";
 import LockIcon from "@material-ui/icons/Lock";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
 import axios from "axios";
@@ -17,41 +17,71 @@ import { server } from "../../Utils/Server";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fade from "@material-ui/core/Fade";
 
-function Signup() {
+function Signup(props) {
+  // i have made username as firstname
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  // const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("role")) {
+      localStorage.getItem("role") === "USER"
+        ? props.history.push("/user-dashboard")
+        : props.history.push("/admin-dashboard");
+    } else {
+      localStorage.clear();
+    }
+  }, []);
 
   const validateEmail = email => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  const handleEmail = e => {
-    setEmail(e.target.value);
+  const handleEmail = () => {
     if (!validateEmail(email)) {
       setErrors({ ...errors, email: "Please enter valid Email Address" });
+      return true;
     } else {
       setErrors({ ...errors, email: "" });
+      return false;
+    }
+  };
+
+  const handleName = () => {
+    if (firstName.length <= 0) {
+      setErrors({ ...errors, firstName: "Please enter valid Username" });
+      return true;
+    } else {
+      setErrors({ ...errors, firstName: "" });
+      return false;
+    }
+  };
+
+  const handlePassword = () => {
+    if (password.length <= 0 || password.length <= 8) {
+      setErrors({
+        ...errors,
+        password: "Password must have a length greater than 8 characters"
+      });
+      return true;
+    } else {
+      setErrors({
+        ...errors,
+        password: ""
+      });
+      return false;
     }
   };
 
   const onHandleSignUp = () => {
-    if (firstName.length <= 0) {
-      setErrors({ ...errors, firstName: "Please enter first name" });
-    } else if (lastName.length <= 0) {
-      setErrors({ ...errors, lastName: "Please enter last name" });
-    } else if (password.length <= 0) {
-      setErrors({ ...errors, password: "Please enter password" });
-    } else if (!validateEmail(email)) {
-      setErrors({
-        ...errors,
-        email: "Please enter valid Email Address"
-      });
-    } else {
+    // console.log(
+    //   handleEmail() || handlePassword() || handleName() ? true : false
+    // );
+    if (!(handleEmail() || handlePassword() || handleName() ? true : false)) {
       const obj = {
         username: firstName,
         // lastName,
@@ -68,8 +98,6 @@ function Signup() {
         })
         .catch(err => console.log(err));
     }
-
-    // if(email.errors ){}
   };
 
   return (
@@ -80,12 +108,15 @@ function Signup() {
         <div className="signup-form--fields">
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
-              First Name
+              User Name
             </InputLabel>
             <Input
               id="standard-adornment-amount"
               value={firstName}
-              onChange={e => setFirstName(e.target.value)}
+              onChange={e => {
+                setFirstName(e.target.value);
+                handleName();
+              }}
               startAdornment={
                 <InputAdornment position="start">
                   <AccountCircleIcon />
@@ -103,7 +134,7 @@ function Signup() {
               {errors.firstName}
             </label>
           </FormControl>
-          <FormControl fullWidth>
+          {/* <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
               Last Name
             </InputLabel>
@@ -128,7 +159,7 @@ function Signup() {
             >
               {errors.lastName}
             </label>
-          </FormControl>
+          </FormControl> */}
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
               Email Address
@@ -139,7 +170,10 @@ function Signup() {
               error={errors.email}
               type="email"
               helperText={errors.email}
-              onChange={e => handleEmail(e)}
+              onChange={e => {
+                setEmail(e.target.value);
+                handleEmail();
+              }}
               startAdornment={
                 <InputAdornment position="start">
                   <EmailIcon />
@@ -165,7 +199,10 @@ function Signup() {
               id="standard-adornment-amount"
               value={password}
               type="password"
-              onChange={e => setPassword(e.target.value)}
+              onChange={e => {
+                setPassword(e.target.value);
+                handlePassword();
+              }}
               startAdornment={
                 <InputAdornment position="start">
                   <LockIcon />
@@ -220,4 +257,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default withRouter(Signup);

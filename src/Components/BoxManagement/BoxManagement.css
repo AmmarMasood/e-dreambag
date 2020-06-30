@@ -1,0 +1,177 @@
+.main-box-manangement {
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-family: "Titillium Web", sans-serif;
+  height: 100vh;
+  position: relative;
+}
+@media (max-width: 400px) {
+  .main-box-manangement {
+    overflow-x: scroll;
+  }
+}
+.main-box-manangement-container {
+  /* border: 2px solid red; */
+  position: relative;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (max-width: 568px) {
+  .main-box-manangement-container {
+    padding: 0px;
+  }
+}
+.main-box-manangement-box-name {
+  /* border: 2px solid yellow; */
+  margin: 3px;
+  text-align: left;
+  border-bottom: 2px solid black;
+}
+.main-box-manangement-box-name h4 {
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+}
+
+.main-box-manangement-box-selection {
+  /* border: 2px solid green; */
+  margin: 3px;
+}
+
+.main-box-manangement-show-box-container {
+  /* display: grid;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  overflow-x: scroll;
+  justify-content: start;
+  background-color: rgba(189, 189, 189, 0.46); */
+}
+.main-box-manangement-show-box {
+  /* border: 2px solid black; */
+  padding: 10px 10px 10px 10px;
+  width: 80px;
+  background-color: white;
+  margin: 5px;
+}
+.main-box-manangement-show-box h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.main-box-manangement-box-management {
+  /* border: 2px solid blue; */
+  margin: 3px;
+  display: grid;
+  /* grid-template-rows: 3fr 3fr 8fr 1fr; */
+  grid-gap: 5px;
+}
+/* PART 1 STARTS */
+.main-box-manangement-dimensions {
+  /* border: 2px solid red; */
+  text-align: left;
+}
+.main-box-manangement-dimensions--heading {
+  background-color: rgba(189, 189, 189, 0.46);
+  /* border: 2px solid blue; */
+}
+.main-box-manangement-dimensions--content {
+  margin-top: 10px;
+  /* border: 2px solid black; */
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.main-box-manangement-dimensions--content-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 5px;
+}
+
+.main-box-manangement-stuff {
+  /* border: 2px solid yellow; */
+}
+.main-box-manangement-savebutton {
+  /* border: 2px solid black; */
+}
+.react-tabs__tab-list {
+  display: grid !important;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  justify-content: start;
+  background-color: rgba(189, 189, 189, 0.46);
+}
+/*  PART 1 ENDS*/
+
+/* PART 2 STARTS */
+.main-box-manangement-photos {
+  /* border: 2px solid green; */
+}
+.main-box-manangement-photos--heading {
+  background-color: rgba(189, 189, 189, 0.46);
+  /* border: 2px solid blue; */
+  text-align: left;
+}
+.main-box-manangement-photos--content {
+}
+.uploadPicturesWrapper {
+  /* border: 2px solid violet; */
+  width: 90vw !important;
+}
+.uploadPicturesWrapper > div {
+  display: grid !important;
+  justify-content: start !important;
+  grid-auto-flow: column !important;
+  grid-gap: 10px !important;
+  overflow-x: scroll !important;
+  background-color: rgba(189, 189, 189, 0.46);
+}
+.uploadPictureContainer {
+  /* border: 2px solid yellowgreen !important; */
+  width: 100px !important;
+  height: 100px;
+}
+.uploadPictureContainer img {
+  width: 100px;
+  height: 100px;
+}
+/* PART 2 ENDS */
+/* PART 3 STARTS */
+.main-box-manangement-stuff--heading {
+  background-color: rgba(189, 189, 189, 0.46);
+  /* border: 2px solid blue; */
+  text-align: left;
+}
+.main-box-manangement-stuff--content {
+  /* border: 2px solid black; */
+}
+.main-box-manangement-stuff--content-select {
+  /* border: 2px solid maroon; */
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 10px;
+}
+.main-box-manangement-stuff--content-list {
+  /* border: 2px solid seagreen; */
+}
+
+.main-box-manangement-stuff--content-clothing {
+  /* border: 2px solid maroon; */
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-rows: 1fr;
+  grid-gap: 10px;
+}
+.main-box-manangement-stuff--content-direct {
+  /* border: 2px solid maroon; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 10px;
+}
+/* PART 3 ENDS */

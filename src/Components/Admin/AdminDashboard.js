@@ -85,16 +85,15 @@ function AdminDashboard(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    if (localStorage.getItem("token") === auth.token) {
-      // make a get request to get items
+    if (localStorage.getItem("role") === "USER") {
+      localStorage.clear();
+    } else {
       axios
         .get(`${server}/easypost/shipments`)
         .then(res => setData(res.data.list))
         .catch(err => window.alert(err));
-    } else {
-      props.history.push("/admin-login");
     }
-  }, [auth]);
+  }, []);
 
   const onReturnLabel = id => {
     axios

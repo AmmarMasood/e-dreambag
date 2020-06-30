@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../Quotation/Appbar/QAppbar";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -8,41 +8,51 @@ import FormControl from "@material-ui/core/FormControl";
 import EmailIcon from "@material-ui/icons/Email";
 import LockIcon from "@material-ui/icons/Lock";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
 import axios from "axios";
 import { server } from "../../Utils/Server";
 
-function Login() {
+function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
 
-  const validateEmail = email => {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleEmail = e => {
-    setEmail(e.target.value);
-    if (!validateEmail(email)) {
-      setErrors({ ...errors, email: "Please enter valid Email Address" });
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("role")) {
+      localStorage.getItem("role") === "USER"
+        ? props.history.push("/user-dashboard")
+        : props.history.push("/admin-dashboard");
     } else {
-      setErrors({ ...errors, email: "" });
+      localStorage.clear();
     }
-  };
+  }, []);
+
   const onHandleSubmit = () => {
-    // if (!errors.email) {
+    localStorage.setItem(
+      "token",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImM1M2VmZjFiLTExNGItNDE5Yy1iMWI1LTEzZDk4ZmUzZmY4NCIsImlhdCI6MTU5MzQyNjAxMywiZXhwIjoxNTkzNDI5NjEzfQ.viDrxV9-8Y70ovalIvLA8GvGRU4FSrimE5v4lfzZcMI"
+    );
+    localStorage.setItem("role", "USER");
     const obj = {
       username: email,
       password
     };
     axios
       .post(`${server}/auth/login`, obj)
-      .then(res => console.log("Successfully LoggedIn"))
-      .catch(err => console.log(err));
-    // }
+      .then(res => {
+        const token = res.data.accessToken;
+        const role = res.data.roles[0].name;
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        role === "USER"
+          ? props.history.push("/user-dashboard")
+          : props.history.push("/admin-dashboard");
+      })
+      .catch(err => {
+        window.alert(err);
+        console.log(err);
+      });
   };
 
   return (
@@ -53,22 +63,22 @@ function Login() {
         <div className="Login-form--fields">
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
-              Email Address
+              Username
             </InputLabel>
             <Input
               id="standard-adornment-amount"
               value={email}
-              error={errors.email}
+              // error={errors.email}
               type="email"
-              helperText={errors.email}
-              onChange={e => handleEmail(e)}
+              // helperText={errors.email}
+              onChange={e => setEmail(e.target.value)}
               startAdornment={
                 <InputAdornment position="start">
                   <EmailIcon />
                 </InputAdornment>
               }
             />
-            <label
+            {/* <label
               style={{
                 textAlign: "left",
                 color: "red",
@@ -77,7 +87,7 @@ function Login() {
               }}
             >
               {errors.email}
-            </label>
+            </label> */}
           </FormControl>
           <FormControl fullWidth>
             <InputLabel htmlFor="standard-adornment-amount">
@@ -100,7 +110,7 @@ function Login() {
               startIcon={<PersonAddIcon />}
               variant="contained"
               color="primary"
-              onClick={onHandleSubmit}
+              onClick={() => onHandleSubmit()}
             >
               Submit
             </Button>
@@ -134,7 +144,6 @@ function Login() {
             >
               Go To SignUp
             </MenuItem>
-
           </div>
           <div>
             Are you an Admin?{" "}
@@ -150,7 +159,6 @@ function Login() {
             >
               Admin Login
             </MenuItem>
-            
           </div>
         </div>
       </div>
@@ -158,4 +166,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default withRouter(Login);
