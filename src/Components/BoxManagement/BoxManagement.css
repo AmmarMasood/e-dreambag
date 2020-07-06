@@ -116,27 +116,17 @@
   text-align: left;
 }
 .main-box-manangement-photos--content {
+  text-align: center;
 }
-.uploadPicturesWrapper {
-  /* border: 2px solid violet; */
-  width: 90vw !important;
-}
-.uploadPicturesWrapper > div {
-  display: grid !important;
-  justify-content: start !important;
-  grid-auto-flow: column !important;
-  grid-gap: 10px !important;
-  overflow-x: scroll !important;
+.main-box-manangement-photos--content-gallery {
+  margin: 15px;
+  width: 90vw;
+  display: grid;
+  justify-content: start;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  overflow-x: scroll;
   background-color: rgba(189, 189, 189, 0.46);
-}
-.uploadPictureContainer {
-  /* border: 2px solid yellowgreen !important; */
-  width: 100px !important;
-  height: 100px;
-}
-.uploadPictureContainer img {
-  width: 100px;
-  height: 100px;
 }
 /* PART 2 ENDS */
 /* PART 3 STARTS */

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./App.css";
 import Quotation from "./Components/Quotation/Quotation";
 import Home from "./Components/Home/Home";
@@ -37,13 +37,17 @@ function App() {
           <Route exact path="/form-shipment" component={Form2} />
           <Route exact path="/admin-login" component={AdminLogin} />
           <Route exact path="/admin-dashboard" component={AdminDashboard} />
-          <Route exact path="/box-management/:orderid" component={Box} />
+          <PrivateRoute exact path="/box-management/:id/:boxId" component={Box} />
           <PrivateRoute
             exact
             path="/user-dashboard"
             component={UserDashboard}
           />
-          <Route exact path="/user-request/:orderid" component={UserRequest} />
+          <PrivateRoute
+            exact
+            path="/user-request/:id/:boxId"
+            component={UserRequest}
+          />
         </Switch>
       </div>
     </Router>

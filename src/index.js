@@ -4,7 +4,12 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import Store from "./State/Store";
+import setAuthToken from "./Utils/setAuthToken";
 
+if (localStorage.getItem("token") && localStorage.getItem("role")) {
+  setAuthToken(localStorage.getItem("token"));
+  console.log("setting up token");
+}
 ReactDOM.render(
   <React.StrictMode>
     <Store>

@@ -1,83 +1,153 @@
-import React, { useState } from "react";
-import ImageUploader from "react-images-upload";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import "../UserRequest.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FileBase64 from "react-file-base64";
+import setAuthToken from "../../../Utils/setAuthToken";
+import axios from "axios";
+import { server } from "../../../Utils/Server";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
-function UploadFiles() {
-  const [pictures, setPictures] = useState([]);
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function UploadFiles({ id }) {
+  const [passport, setPassport] = useState([]);
   const [certificate, setCertificate] = useState([]);
-  const [base64Passport, setBase64Passport] = useState([]);
-  const [base64Certificate, setBase64Certificate] = useState([]);
+  const [koreanCertificate, setKoreanCertificate] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [openNotification, setOpenNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
 
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-
-  const convertArrayToBase64 = () => {
-    let base64Passporta = [];
-    let base64Certificatea = [];
-    const base64Images = pictures.map(async pic => await toBase64(pic));
-    const base64Images2 = certificate.map(async pic => await toBase64(pic));
-
-    base64Images.map(p => {
-      p.then(res => base64Passporta.push(res));
-    });
-    base64Images2.map(p => {
-      p.then(res => base64Certificatea.push(res));
-    });
-    setBase64Certificate(base64Certificatea);
-    setBase64Passport(base64Passporta);
-  };
-
-  const onButtonSubmit = () => {
-    convertArrayToBase64();
+  useEffect(() => {
+    setAuthToken(localStorage.getItem("token"));
     setLoading(true);
+    axios
+      .get(`${server}/documents?luggageId=${id}`)
+      .then(res => {
+        setKoreanCertificate(res.data.koreanCard);
+        setPassport(res.data.passportCopy);
+        setCertificate(res.data.immigrationCertificate);
+        setLoading(false);
+      })
+      .catch(err => {
+        // window.alert(err);
+        console.log(err);
+        setNotificationMessage("Error: Unable get the documents ");
+        setNotificationType("error");
+        setOpenNotification(true);
+        setLoading(false);
+      });
+  }, []);
+  const onButtonSubmit = () => {
+    const obj = {
+      koreanCard: koreanCertificate,
 
-    setTimeout(function() {
-      console.log(base64Passport);
-      console.log(base64Certificate);
-      setLoading(false);
-    }, 2000);
+      immigrationCertificate: certificate,
+
+      passportCopy: passport
+    };
+    axios
+      .post(`${server}/documents?luggageId=${id}`, obj)
+      .then(res => {
+        setNotificationMessage("Success: Updated the documents ");
+        setNotificationType("success");
+        setOpenNotification(true);
+        setLoading(false);
+      })
+      .catch(err => {
+        setNotificationMessage("Error: Unable to update document ");
+        setNotificationType("error");
+        setOpenNotification(true);
+        setLoading(false);
+        console.log(err);
+        // window.alert(err);
+      });
   };
 
+  const getPassportFiles = file => {
+    const acceptedImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+    if (acceptedImageTypes.includes(file.type)) {
+      setPassport(file.base64);
+    } else {
+      window.alert("Only image files can be uploaded");
+    }
+  };
+
+  const getCertificateFiles = file => {
+    const acceptedImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+    if (acceptedImageTypes.includes(file.type)) {
+      setCertificate(file.base64);
+    } else {
+      window.alert("Only image files can be uploaded");
+    }
+  };
+  const getKoreanFiles = file => {
+    const acceptedImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+    if (acceptedImageTypes.includes(file.type)) {
+      setKoreanCertificate(file.base64);
+    } else {
+      window.alert("Only image files can be uploaded");
+    }
+  };
+
+  const showPassport = () => <img src={passport} height="130px" />;
+  const showCertificate = () => <img src={certificate} height="130px" />;
+  const showKorean = () => <img src={koreanCertificate} height="130px" />;
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      setOpenNotification(false);
+    }
+
+    setOpenNotification(false);
+  };
   return (
     <div>
-      <div className="uploadfiles-container">
-        <div className="uploadfile-container">
-          <h4>Passport Copy</h4>
-          <ImageUploader
-            withIcon={true}
-            // fileContainerStyle={{
-            //   border: "2px solid red"
-            // }}
-            onChange={picture => setPictures(picture)}
-            imgExtension={[".jpg", ".png"]}
-            maxFileSize={5242880}
-            withPreview={true}
-            buttonText="Select Files"
-          />
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <div className="uploadfiles-container">
+          <Snackbar
+            open={openNotification}
+            autoHideDuration={2000}
+            onClose={handleClose}
+          >
+            <Alert onClose={handleClose} severity={notificationType}>
+              {notificationMessage}
+            </Alert>
+          </Snackbar>
+          <div className="uploadfile-container">
+            <h4>Passport Copy</h4>
+            <FileBase64 multiple={false} onDone={getPassportFiles} />
+            <div className="uploadfile-container-gallery">{showPassport()}</div>
+            <div style={{ textAlign: "center" }}>
+              Only file formats with jpeg|png|jpg will be accepted
+            </div>
+          </div>
+          <div className="uploadfile-container">
+            <h4>Immigration Certificate</h4>
+            <FileBase64 multiple={false} onDone={getCertificateFiles} />
+            <div className="uploadfile-container-gallery">
+              {showCertificate()}
+            </div>
+            <div style={{ textAlign: "center" }}>
+              Only file formats with jpeg|png|jpg will be accepted
+            </div>
+          </div>
+          <div className="uploadfile-container">
+            <h4>Korean Certificate</h4>
+            <FileBase64 multiple={false} onDone={getKoreanFiles} />
+            <div className="uploadfile-container-gallery">{showKorean()}</div>
+            <div style={{ textAlign: "center" }}>
+              Only file formats with jpeg|png|jpg will be accepted
+            </div>
+          </div>
         </div>
-        <div className="uploadfile-container">
-          <h4>Immigration Certificate</h4>
-          <ImageUploader
-            withIcon={true}
-            // fileContainerStyle={{
-            //   border: "2px solid red"
-            // }}
-            onChange={picture => setCertificate(picture)}
-            imgExtension={[".jpg", ".png"]}
-            maxFileSize={5242880}
-            withPreview={true}
-            buttonText="Select Files"
-          />
-        </div>
-      </div>
+      )}
+
       <div>
         <Button
           variant="contained"
@@ -85,7 +155,7 @@ function UploadFiles() {
           style={{ marginTop: "50px", marginBotton: "100px" }}
           onClick={onButtonSubmit}
         >
-          {loading ? <CircularProgress /> : "Upload Files"}
+          Upload Files
         </Button>
       </div>
     </div>

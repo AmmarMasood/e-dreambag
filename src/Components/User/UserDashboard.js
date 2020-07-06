@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import QAppbar from "../Quotation/Appbar/QAppbar";
 import "./UserDashboard.css";
 import {
@@ -11,30 +11,58 @@ import {
   ListItemText
 } from "@material-ui/core";
 import ListIcon from "@material-ui/icons/List";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../Utils/Server";
+import setAuthToken from "../../Utils/setAuthToken";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 function UserDashboard(props) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (localStorage.getItem("role") === "ADMIN") {
       localStorage.clear();
       props.history.push("/login");
+    } else {
+      setAuthToken(localStorage.getItem("token"));
+      setLoading(true);
+      axios
+        .get(`${server}/studentbag`, { data: {} })
+        .then(res => {
+          setData(res.data);
+          setLoading(false);
+        })
+        .catch(err => {
+          setLoading(false);
+          window.alert(err);
+          console.log(err);
+        });
     }
   }, []);
-  const showList = () => (
-    <div>
-      <ListItem
-        alignItems="flex-start"
-        style={{ textTransform: "capitalize" }}
-        className="listitem-userdashboard"
-      >
-        <div>Returning Director</div>
-        <div>2268</div>
-        <div>Waiting for Approval</div>
-        <div>Complete Information</div>
-      </ListItem>
-      <Divider variant="inset" component="li" />
-    </div>
-  );
+  const showList = () =>
+    data.map((item, i) => (
+      <div>
+        <ListItem
+          alignItems="flex-start"
+          key={i}
+          style={{ textTransform: "capitalize" }}
+          className="listitem-userdashboard"
+        >
+          <div>{item.id ? item.id : ""}</div>
+          <div>{item.numberOfBoxes ? item.numberOfBoxes : ""}</div>
+          <div>Waiting for Approval</div>
+          <div>
+            <Link to={`/user-request/${item.id}/${item.boxId}`}>
+              Complete Information
+            </Link>
+          </div>
+        </ListItem>
+        <Divider variant="inset" component="li" />
+      </div>
+    ));
+
   return (
     <div className="main-userdashboard">
       <QAppbar colorInvert={true} />
@@ -59,12 +87,13 @@ function UserDashboard(props) {
               backgroundColor: "rgba(189, 189, 189, 0.46)"
             }}
           >
-            <div>Application Date</div>
+            {/* <div>Application Date</div> */}
             <div>Order#</div>
+            <div>Boxes</div>
             <div>Order Status</div>
             <div>CheckList</div>
           </div>
-          {showList()}
+          {loading ? <CircularProgress /> : showList()}
         </List>
       </div>
     </div>

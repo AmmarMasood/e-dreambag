@@ -15,6 +15,7 @@ import ShipmentDate from "./StepperComponents/ShipmentDate";
 import { withRouter } from "react-router-dom";
 import Payment from "./StepperComponents/Payment";
 import UploadFiles from "./StepperComponents/UploadFiles";
+import ShowLabel from "./StepperComponents/ShowLabel";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,21 +48,21 @@ function getSteps() {
   ];
 }
 
-function getStepContent(step, orderId, history) {
+function getStepContent(step, id, boxId, history) {
   switch (step) {
     case 0:
-      return <Forms usa={true} orderId={orderId} />;
+      return <Forms usa={true} id={id} />;
     case 1:
-      return <Forms usa={false} orderId={orderId} />;
+      return <Forms usa={false} id={id} />;
     case 2:
-      return <ShipmentDate />;
+      return <ShipmentDate id={id} />;
     case 3:
       return (
         <Button
           variant="outlined"
           color="default"
           style={{ padding: "15px 55px 15px 55px" }}
-          onClick={() => history.push(`/box-management/${orderId}`)}
+          onClick={() => history.push(`/box-management/${id}/${boxId}`)}
           startIcon={
             <img src={require("../../Images/icons/box.svg")} height="25px" />
           }
@@ -70,13 +71,13 @@ function getStepContent(step, orderId, history) {
         </Button>
       );
     case 4:
-      return "Label Goes here Label Goes here Label Goes here Label Goes here Label Goes here Label Goes here ";
+      return <ShowLabel id={id} />;
     case 5:
       return ``;
     case 6:
       return <Payment />;
     case 7:
-      return <UploadFiles />;
+      return <UploadFiles id={id} />;
     case 8:
       return `Try out different ad text to see what brings in the most customers,
                                   and learn how to enhance your ads using features like ad extensions.
@@ -154,7 +155,7 @@ function UserStepper(props) {
             </StepButton>
             <StepContent>
               <Typography>
-                {getStepContent(index, props.orderId, props.history)}
+                {getStepContent(index, props.id, props.boxId, props.history)}
               </Typography>
               <div className={classes.actionsContainer}>
                 <div>

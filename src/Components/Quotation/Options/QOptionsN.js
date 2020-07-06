@@ -29,7 +29,7 @@ function QOptionsN() {
 
   const handleBox = e => {
     console.log(boxTypeToSend);
-    if (boxTypeToSend === "hamnipost-box" || boxTypeToSend === "carrier") {
+    if (boxTypeToSend === "COMPANYBOX" || boxTypeToSend === "COMPANYBOX") {
       if (e.target.value == 1) {
         {
           console.log(box);
@@ -65,10 +65,7 @@ function QOptionsN() {
           p: 70
         });
       }
-    } else if (
-      boxTypeToSend === "own-box" ||
-      boxTypeToSend === "homedepot-box"
-    ) {
+    } else if (boxTypeToSend === "OWNBOX" || boxTypeToSend === "OWNBOX") {
       if (e.target.value == 1) {
         {
           console.log(box);

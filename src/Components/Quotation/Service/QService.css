@@ -6,6 +6,7 @@
   grid-template-rows: 1fr;
   text-align: center;
   border-top: 2px solid #f7f7f7;
+  font-family: "Titillium Web", sans-serif;
 }
 .image {
   /* border: 2px solid purple; */

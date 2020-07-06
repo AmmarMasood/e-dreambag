@@ -33,9 +33,10 @@ import {
   DialogContentText,
   DialogTitle
 } from "@material-ui/core";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fade from "@material-ui/core/Fade";
+import setAuthToken from "../../../Utils/setAuthToken";
 
 function QPayment(props) {
   const [payInfo, setPayInfo] = useContext(paymentInfoContext);
@@ -54,6 +55,7 @@ function QPayment(props) {
   const [boxTypeToSend, setBoxTypeToSend] = useContext(boxTypeContext);
   const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paypalId, setPaypalId] = useState("");
   // login form stuff
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -104,8 +106,8 @@ function QPayment(props) {
             },
             onApprove: async (data, actions) => {
               const order = await actions.order.capture();
+              setPaypalId(order.id);
               setPaidFor(true);
-              console.log(order);
             }
           })
           .render(paypalRef);
@@ -114,6 +116,7 @@ function QPayment(props) {
   });
 
   useEffect(() => {
+    setAuthToken(localStorage.getItem("token"));
     if (paidfor) {
       const toAddress = {
         name: "",
@@ -131,19 +134,23 @@ function QPayment(props) {
       const parcel = { height: 10, width: 10, weight: 10, length: 10 };
       setLoading(true);
       axios
-        .post(`${server}/easypost/shipments`, {
+        .post(`${server}/studentbag`, {
           toAddress,
           fromAddress,
           parcel,
-          boxType: boxTypeToSend,
-          boxPrice: box.p,
+          serviceType: boxTypeToSend,
+          price: box.p,
+          transactionId: paypalId,
           numberOfBoxes: parseInt(box.b, 10)
         })
         .then(res => {
           window.alert("Success. Please Go Back to Your Dashboard");
           setLoading(false);
         })
-        .catch(err => window.alert(err));
+        .catch(err => {
+          window.alert(err);
+          setLoading(false);
+        });
     }
   }, [paidfor]);
 
@@ -165,11 +172,6 @@ function QPayment(props) {
   };
 
   const handleLogin = () => {
-    localStorage.setItem(
-      "token",
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjdlZmE3YTRmLTg3OWYtNDkwNC1iN2VjLTQwN2IwNzQ1NTBhYiIsImlhdCI6MTU5MzM0OTc3NiwiZXhwIjoxNTkzMzUzMzc2fQ.vMpNZBykGa_mYR874mcLEhx0DwGxWlTf4bfFjLScFXQ"
-    );
-    localStorage.setItem("role", "USER");
     const obj = {
       username: email,
       password
@@ -178,7 +180,8 @@ function QPayment(props) {
       .post(`${server}/auth/login`, obj)
       .then(res => {
         const token = res.data.accessToken;
-        const role = res.data.roles[0].name;
+        // const role = res.data.roles[0].name;
+        const role = "USER";
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         setOpen(false);
@@ -235,6 +238,12 @@ function QPayment(props) {
         <Button onClick={handleLogin} color="primary">
           Login
         </Button>
+      </DialogActions>
+      <DialogActions>
+        Not a member? Go to{" "}
+        <Link to="/Signup" style={{ padding: "0 5px 0 5px" }}>
+          Registeration
+        </Link>
       </DialogActions>
     </Dialog>
   );
@@ -404,8 +413,6 @@ function QPayment(props) {
               />
             </div>
           </div> */}
-        </div>
-        <div className="payment-proc">
           <div className="payment-proc-adv">
             <div>
               <h4 style={{ padding: 2, margin: 0 }}>Payment in advance</h4>
@@ -419,6 +426,21 @@ function QPayment(props) {
               </p>
             </div>
           </div>
+        </div>
+        <div className="payment-proc">
+          {/* <div className="payment-proc-adv">
+            <div>
+              <h4 style={{ padding: 2, margin: 0 }}>Payment in advance</h4>
+              <p style={{ padding: 2, margin: 0 }}>
+                Reservation fee for shipping. Please pay deposit for reservation
+                request.
+              </p>
+              <p style={{ padding: 2, margin: 0 }}>
+                ※ After reservation, it can be modified up to two days before
+                the shipment date (excluding weekends).
+              </p>
+            </div>
+          </div> */}
           <div className="payment-proc-card">
             {/* <div className="payment-proc-card-head">
               Service application deposit: $ 40

@@ -293,7 +293,7 @@ function QServiceN() {
         ownBox: false,
         homedepotBox: false
       });
-      setBoxTypeToSend("hamnipost-box");
+      setBoxTypeToSend("COMPANYBOX");
     }
     if (panel === "panel2") {
       setBoxType({
@@ -302,7 +302,7 @@ function QServiceN() {
         ownBox: false,
         homedepotBox: false
       });
-      setBoxTypeToSend("carrier");
+      setBoxTypeToSend("COMPANYBOX");
     }
     if (panel === "panel3") {
       setBoxType({
@@ -311,7 +311,7 @@ function QServiceN() {
         ownBox: true,
         homedepotBox: false
       });
-      setBoxTypeToSend("own-box");
+      setBoxTypeToSend("OWNBOX");
     }
     if (panel === "panel4") {
       setBoxType({
@@ -320,7 +320,7 @@ function QServiceN() {
         ownBox: false,
         homedepotBox: true
       });
-      setBoxTypeToSend("homedepot-box");
+      setBoxTypeToSend("OWNBOX");
     }
   };
 

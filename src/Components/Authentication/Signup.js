@@ -15,7 +15,6 @@ import "./Authentication.css";
 import axios from "axios";
 import { server } from "../../Utils/Server";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Fade from "@material-ui/core/Fade";
 
 function Signup(props) {
   // i have made username as firstname
@@ -94,9 +93,10 @@ function Signup(props) {
         .post(`${server}/auth/signup`, obj)
         .then(res => {
           setLoading(false);
-          window.alert("SignUp successfull");
+          window.alert("Registration successful");
+          props.history.push("/login");
         })
-        .catch(err => console.log(err));
+        .catch(err => window.alert(err));
     }
   };
 

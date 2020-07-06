@@ -8,30 +8,15 @@ import "react-tabs/style/react-tabs.css";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../Utils/Server";
+import setAuthToken from "../../Utils/setAuthToken";
 
 function Box(props) {
   const [activeId, setActiveId] = useState("");
   const [data, setData] = useState({
-    id: "029be58700504afb8f78bf3057dfe6fa",
+    id: "",
     parcels: [
       {
-        id: "07a948a89b704af18dc2f4ab6b871fba",
-        height: 0,
-        weight: 0,
-        width: 0,
-        length: 0,
-        contents: []
-      },
-      {
-        id: "162b29e02d7a4fb186f6ec9d6339023c",
-        height: 0,
-        weight: 0,
-        width: 0,
-        length: 0,
-        contents: []
-      },
-      {
-        id: "61af5032d4ce4b588746f874584ca5f5",
+        id: "",
         height: 0,
         weight: 0,
         width: 0,
@@ -46,8 +31,9 @@ function Box(props) {
       // localStorage.clear();
       // props.history.push("/login");
     } else {
-      const id = "029be58700504afb8f78bf3057dfe6fa";
-      axios(`${server}/boxes?boxId=${props.match.params.orderid}`)
+      setAuthToken(localStorage.getItem("token"));
+      axios
+        .get(`${server}/boxes?boxId=${props.match.params.boxId}`, { data: {} })
         .then(res => setData(res.data))
         .catch(err => {
           window.alert(err);
@@ -74,7 +60,7 @@ function Box(props) {
     data.parcels ? (
       data.parcels.map((item, i) => (
         <TabPanel>
-          <BoxManagement aboutBox={item} />{" "}
+          <BoxManagement key={i} aboutBox={item} />{" "}
         </TabPanel>
       ))
     ) : (
@@ -92,9 +78,7 @@ function Box(props) {
               align="left"
               src={require("../../Images/icons/box.svg")}
             />{" "}
-            <h4>{`Shipping List Management: ${
-              data.id ? data.id : "Not Availeble"
-            }`}</h4>
+            <h4>{`Shipping List Management: ${props.match.params.id}`}</h4>
           </div>
 
           <div className="main-box-manangement-box-selection">

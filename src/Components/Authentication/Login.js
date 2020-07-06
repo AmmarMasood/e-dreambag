@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Nav from "../Quotation/Appbar/QAppbar";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -13,12 +13,25 @@ import MenuItem from "@material-ui/core/MenuItem";
 import "./Authentication.css";
 import axios from "axios";
 import { server } from "../../Utils/Server";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  boxContext,
+  boxTypeContext,
+  fromAddressContext
+} from "../../State/Store";
 
 function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [box, setBox] = useContext(boxContext);
+  const [fromAddress, setFromAddress] = useContext(fromAddressContext);
+  const [boxTypeToSend, setBoxTypeToSend] = useContext(boxTypeContext);
 
   useEffect(() => {
+    setFromAddress({});
+    setBox({ b: 0, p: 0 });
+    setBoxTypeToSend("");
     if (localStorage.getItem("token") && localStorage.getItem("role")) {
       localStorage.getItem("role") === "USER"
         ? props.history.push("/user-dashboard")
@@ -29,20 +42,18 @@ function Login(props) {
   }, []);
 
   const onHandleSubmit = () => {
-    localStorage.setItem(
-      "token",
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImM1M2VmZjFiLTExNGItNDE5Yy1iMWI1LTEzZDk4ZmUzZmY4NCIsImlhdCI6MTU5MzQyNjAxMywiZXhwIjoxNTkzNDI5NjEzfQ.viDrxV9-8Y70ovalIvLA8GvGRU4FSrimE5v4lfzZcMI"
-    );
-    localStorage.setItem("role", "USER");
     const obj = {
       username: email,
       password
     };
+    setLoading(true);
     axios
       .post(`${server}/auth/login`, obj)
       .then(res => {
+        setLoading(false);
         const token = res.data.accessToken;
-        const role = res.data.roles[0].name;
+        // const role = res.data.roles[0].name;
+        const role = "USER";
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         role === "USER"
@@ -50,6 +61,7 @@ function Login(props) {
           : props.history.push("/admin-dashboard");
       })
       .catch(err => {
+        setLoading(false);
         window.alert(err);
         console.log(err);
       });
@@ -106,15 +118,22 @@ function Login(props) {
             />
           </FormControl>
           <div>
-            <Button
-              startIcon={<PersonAddIcon />}
-              variant="contained"
-              color="primary"
-              onClick={() => onHandleSubmit()}
-            >
-              Submit
-            </Button>
+            {loading ? (
+              <div>
+                <CircularProgress />
+              </div>
+            ) : (
+              <Button
+                startIcon={<PersonAddIcon />}
+                variant="contained"
+                color="primary"
+                onClick={() => onHandleSubmit()}
+              >
+                Submit
+              </Button>
+            )}
           </div>
+
           <div>
             Forgot your password?{" "}
             <MenuItem
@@ -143,21 +162,6 @@ function Login(props) {
               to={"/signup"}
             >
               Go To SignUp
-            </MenuItem>
-          </div>
-          <div>
-            Are you an Admin?{" "}
-            <MenuItem
-              style={{
-                display: "inline",
-                color: "blue",
-                textDecoration: "underline",
-                padding: "2px"
-              }}
-              component={Link}
-              to={"/admin-login"}
-            >
-              Admin Login
             </MenuItem>
           </div>
         </div>
