@@ -26,6 +26,7 @@
 
 /* from upload files component */
 .uploadfiles-container {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 5px;

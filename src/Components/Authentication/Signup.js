@@ -96,7 +96,7 @@ function Signup(props) {
           window.alert("Registration successful");
           props.history.push("/login");
         })
-        .catch(err => window.alert(err));
+        .catch(err => {window.alert(err); setLoading(false)});
     }
   };
 
