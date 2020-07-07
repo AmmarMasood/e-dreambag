@@ -35,6 +35,7 @@
 .uploadfile-container {
   border: 1px solid #c1c1c1;
   padding: 10px;
+  position: relative;
 }
 /* .uploadfile-container-gallery {
   margin: 10px;
